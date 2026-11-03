@@ -1,0 +1,37 @@
+Graffin Studio 2.4 — Windows x64
+
+FFmpeg and FFprobe 9.0.2, static Windows x64 essentials build by Gyan.
+GPL version 3. See FFmpeg-GPL-3.0.txt and FFmpeg-BUILD-README.txt, including
+the exact build configuration and component licenses.
+Binary distribution: https://github.com/GyanD/codexffmpeg/releases/tag/9.0.2
+FFmpeg source: https://github.com/FFmpeg/FFmpeg/commit/946fcce07b
+Build information and corresponding build scripts: https://www.gyan.dev/ffmpeg/builds/
+
+whisper.cpp 1.8.2 CPU x64 — MIT; see media-tools/Whisper-LICENSE.txt.
+Source: https://github.com/ggml-org/whisper.cpp/tree/v1.8.2
+The Windows CPU binary requires AVX2, FMA and F16C; no CUDA/RTX is required.
+The local ggml-small-q5_1 speech model is downloaded separately on first setup.
+
+Node.js 24.21.0 Windows x64 — MIT and bundled third-party notices.
+See media-tools/Node-LICENSE.txt. https://nodejs.org/dist/v24.21.0/
+
+yt-dlp 2026.08.19 Windows x64. Source: Unlicense. The combined PyInstaller
+binary includes GPLv3+ components. See FFmpeg-GPL-3.0.txt,
+media-tools/yt-dlp-LICENSE.txt and media-tools/yt-dlp-THIRD_PARTY_LICENSES.txt.
+Source and binary releases: https://github.com/yt-dlp/yt-dlp/tree/2026.08.19
+
+Microsoft Visual C++ v14 runtime 14.51.36247.0: four unmodified app-local x64
+DLLs from Microsoft's signed VC_redist.x64.exe. Microsoft license terms are
+in media-tools/Microsoft-VC-Runtime-License.txt.
+Original distribution: https://aka.ms/vc14/vc_redist.x64.exe
+The runtime does not require system installation or administrator privileges.
+
+Application framework: Tauri (MIT or Apache-2.0), https://github.com/tauri-apps/tauri
+React (MIT), https://github.com/facebook/react
+Lucide icons (ISC), https://github.com/lucide-icons/lucide
+SHA-256 helpers: sha2 (MIT or Apache-2.0).
+Additional dependency license texts: DEPENDENCY_LICENSES.txt.
+
+Artwork and banner were supplied or created for the owner of this project.
+Windows runtime versions, SHA-256 hashes, upstream URLs, file sizes and PE
+import tables are in media-tools/windows-runtime-manifest.json.

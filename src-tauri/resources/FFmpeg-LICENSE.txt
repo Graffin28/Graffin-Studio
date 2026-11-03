@@ -1,0 +1,4 @@
+FFmpeg / FFprobe 9.0.2, Windows x64 static essentials build by Gyan.
+License: GPL version 3; see FFmpeg-GPL-3.0.txt.
+Exact build configuration and source commit: FFmpeg-BUILD-README.txt.
+https://github.com/GyanD/codexffmpeg/releases/tag/9.0.2
