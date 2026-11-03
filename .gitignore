@@ -1,0 +1,21 @@
+node_modules/
+dist/
+src-tauri/target/
+src-tauri/gen/
+__pycache__/
+*.pyc
+*.log
+.DS_Store
+.env
+.env.*
+state.json
+.publish/
+qa/media-tools-build/
+qa/*.mp4
+# Executable dependencies ship in Releases rather than Git history.
+src-tauri/resources/ffmpeg
+src-tauri/resources/ffprobe
+src-tauri/resources/*.exe
+src-tauri/resources/media-tools/*.exe
+src-tauri/resources/media-tools/*.dll
+src-tauri/resources/media-tools/whisper-cli
