@@ -1,0 +1,10 @@
+{
+  "family": "Manrope ExtraBold",
+  "weight": 800,
+  "license": "SIL Open Font License 1.1",
+  "source": "https://github.com/google/fonts/tree/main/ofl/manrope",
+  "sourceFontSha256": "3ae11c49db0455a3cc33e37d380f20fdb8c7f8b41dc07625c177e3d87a9d6ae6",
+  "staticFontSha256": "8ebaaaffa858401db8af2376d4005c38d9448f507a161b9c31c2cf2113c2b748",
+  "transformation": "static instance weight800 using fontTools; font unchanged otherwise",
+  "cyrillic": true
+}

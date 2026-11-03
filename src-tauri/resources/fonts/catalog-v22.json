@@ -1,0 +1,50 @@
+[
+  {
+    "family": "Montserrat ExtraBold",
+    "weight": 800,
+    "filename": "Montserrat-ExtraBold.ttf",
+    "source": "https://github.com/google/fonts/tree/47d54ca1ebb14fd864695f1d39dc734f39017c33/ofl/montserrat",
+    "revision": "47d54ca1ebb14fd864695f1d39dc734f39017c33",
+    "sourceSha256": "0f7b311b2f3279e4eef9b2f968bcdbab6e28f4daeb1f049f4f278a902bcd82f7",
+    "staticSha256": "df90b383ca67cbfe6e1ea8f8efcd67157c0c03dc835bd02d9439503a438868ff",
+    "license": "SIL Open Font License1.1",
+    "cyrillic": true,
+    "transformation": "Staticweightinstance andexplicitfamilyname fordeterministiclibassselection"
+  },
+  {
+    "family": "Rubik Bold",
+    "weight": 700,
+    "filename": "Rubik-Bold.ttf",
+    "source": "https://github.com/google/fonts/tree/47d54ca1ebb14fd864695f1d39dc734f39017c33/ofl/rubik",
+    "revision": "47d54ca1ebb14fd864695f1d39dc734f39017c33",
+    "sourceSha256": "1b3a7437ba2af80e465e773ed60c5036d1ba6ace492d89046dbcf18fb31e4e88",
+    "staticSha256": "046a30d4303934175eb4451baeacd1c2c33848b6c42c6e9818f67cefdc6117f7",
+    "license": "SIL Open Font License1.1",
+    "cyrillic": true,
+    "transformation": "Staticweightinstance andexplicitfamilyname fordeterministiclibassselection"
+  },
+  {
+    "family": "Oswald Bold",
+    "weight": 700,
+    "filename": "Oswald-Bold.ttf",
+    "source": "https://github.com/google/fonts/tree/47d54ca1ebb14fd864695f1d39dc734f39017c33/ofl/oswald",
+    "revision": "47d54ca1ebb14fd864695f1d39dc734f39017c33",
+    "sourceSha256": "5b38c246e255a12f5712d640d56bcced0472466fc68983d2d0410ec0457c2817",
+    "staticSha256": "5dc950e628cc93334ba6098b59199dd9c10ef99fe5181974ef8f635074952511",
+    "license": "SIL Open Font License1.1",
+    "cyrillic": true,
+    "transformation": "Staticweightinstance andexplicitfamilyname fordeterministiclibassselection"
+  },
+  {
+    "family": "Russo One",
+    "weight": 400,
+    "filename": "RussoOne-Regular.ttf",
+    "source": "https://github.com/google/fonts/tree/47d54ca1ebb14fd864695f1d39dc734f39017c33/ofl/russoone",
+    "revision": "47d54ca1ebb14fd864695f1d39dc734f39017c33",
+    "sourceSha256": "bc0abcc660bd8b7ad3000ecb2898a27c58a29a50f7ec81652fa12e75148d09df",
+    "staticSha256": "0482d1eb04d3fb76d4f9bd39ad2c28cb3b0e424a74964645ea5471b5735cef8d",
+    "license": "SIL Open Font License1.1",
+    "cyrillic": true,
+    "transformation": "Staticweightinstance andexplicitfamilyname fordeterministiclibassselection"
+  }
+]
