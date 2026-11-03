@@ -1,0 +1,342 @@
+{
+  "platform": "windows-x64",
+  "assets": {
+    "ffmpeg": {
+      "version": "9.0.2",
+      "filename": "ffmpeg-9.0.2-essentials_build.zip",
+      "url": "https://github.com/GyanD/codexffmpeg/releases/download/9.0.2/ffmpeg-9.0.2-essentials_build.zip",
+      "sha256": "60f467265b1e312373dbcd92200c2618a74850f98d3d078e94296bb3fa2047ba",
+      "bytes": 114768076,
+      "checksumSource": "https://api.github.com/repos/GyanD/codexffmpeg/releases/tags/9.0.2"
+    },
+    "whisper": {
+      "version": "1.8.2",
+      "filename": "whisper-bin-x64-v1.8.2.zip",
+      "url": "https://github.com/ggml-org/whisper.cpp/releases/download/v1.8.2/whisper-bin-x64.zip",
+      "sha256": "b1514ebc099765e39fa37eb780b92a140a94c86bb0b3b3d98226b38825979732",
+      "bytes": 3832432,
+      "checksumSource": "https://api.github.com/repos/ggml-org/whisper.cpp/releases/tags/v1.8.2"
+    },
+    "node": {
+      "version": "24.21.0",
+      "filename": "node-v24.21.0-win-x64.zip",
+      "url": "https://nodejs.org/dist/v24.21.0/node-v24.21.0-win-x64.zip",
+      "sha256": "158f7685b44de51f6c0df1d153526cbcd3e1bc739a8dfc607721cef75de9e541",
+      "checksumSource": "https://nodejs.org/dist/v24.21.0/SHASUMS256.txt"
+    },
+    "ytDlp": {
+      "version": "2026.08.19",
+      "filename": "yt-dlp-2026.08.19.exe",
+      "url": "https://github.com/yt-dlp/yt-dlp/releases/download/2026.08.19/yt-dlp.exe",
+      "sha256": "66674953fe251b89f4d08c5f0e35e0728679bd67ab3d7d05c0562af101dd3e7a",
+      "bytes": 17840399,
+      "checksumSource": "https://github.com/yt-dlp/yt-dlp/releases/download/2026.08.19/SHA2-256SUMS"
+    },
+    "visualCRuntime": {
+      "version": "14.51.36247.0",
+      "filename": "VC_redist.x64.exe",
+      "url": "https://download.visualstudio.microsoft.com/download/pr/ebdab8e5-1d7b-4d9f-a11b-cbb1720c3b12/843068991DAAA1F73AD9F6239BCE4D0F6A07A51F18C37EA2A867E9BECA71295C/VC_redist.x64.exe",
+      "sha256": "843068991daaa1f73ad9f6239bce4d0f6a07a51f18c37ea2a867e9beca71295c",
+      "bytes": 18731856,
+      "checksumSource": "Microsoft content-addressed download URL, resolved from https://aka.ms/vc14/vc_redist.x64.exe"
+    }
+  },
+  "licenses": {
+    "ytDlpLicense": {
+      "filename": "yt-dlp-LICENSE.txt",
+      "url": "https://raw.githubusercontent.com/yt-dlp/yt-dlp/2026.08.19/LICENSE",
+      "sha256": "7e12e5df4bae12cb21581ba157ced20e1986a0508dd10d0e8a4ab9a4cf94e85c"
+    },
+    "ytDlpThirdParty": {
+      "filename": "yt-dlp-THIRD_PARTY_LICENSES.txt",
+      "url": "https://raw.githubusercontent.com/yt-dlp/yt-dlp/2026.08.19/THIRD_PARTY_LICENSES.txt",
+      "sha256": "472aefe951c7db35e1657c1d13fd337140511ed6f2b329205105ad441c5a02b7"
+    },
+    "whisperLicense": {
+      "filename": "Whisper-LICENSE.txt",
+      "url": "https://raw.githubusercontent.com/ggml-org/whisper.cpp/v1.8.2/LICENSE",
+      "sha256": "e562a2ddfaf8280537795ac5ecd34e3012b6582a147ef69ba6a6a5c08c84757d"
+    },
+    "visualCLicense": {
+      "filename": "Microsoft-VC-Runtime-License.docx",
+      "url": "https://visualstudio.microsoft.com/wp-content/uploads/2025/10/Visual-C-V14-License-Redistributable_and_Runtime_ENU.docx",
+      "sha256": "08651651a7602fc7c0e2763de0fde1ff9f868df2780597cd1775ee9d6441c783"
+    }
+  },
+  "files": {
+    "ffmpeg.exe": {
+      "bytes": 105423872,
+      "sha256": "3256173f3f8bffd7df12227c68adf68025edb1832273a9530688a7bb1ed8edec",
+      "machine": "AMD64",
+      "format": "PE32+",
+      "imports": [
+        "ADVAPI32.dll",
+        "api-ms-win-crt-conio-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-multibyte-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-utility-l1-1-0.dll",
+        "AVICAP32.dll",
+        "AVRT.dll",
+        "bcrypt.dll",
+        "CRYPT32.dll",
+        "GDI32.dll",
+        "IPHLPAPI.DLL",
+        "KERNEL32.dll",
+        "MSIMG32.dll",
+        "ncrypt.dll",
+        "ole32.dll",
+        "OLEAUT32.dll",
+        "SHELL32.dll",
+        "SHLWAPI.dll",
+        "USER32.dll",
+        "WINMM.dll",
+        "WS2_32.dll"
+      ]
+    },
+    "ffprobe.exe": {
+      "bytes": 105221120,
+      "sha256": "f0d36ecbbdd3bcfac3efa078c96c7271c2e68b3810595552ac3b7f17e9a65c52",
+      "machine": "AMD64",
+      "format": "PE32+",
+      "imports": [
+        "ADVAPI32.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-multibyte-l1-1-0.dll",
+        "api-ms-win-crt-private-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-utility-l1-1-0.dll",
+        "AVICAP32.dll",
+        "AVRT.dll",
+        "bcrypt.dll",
+        "CRYPT32.dll",
+        "GDI32.dll",
+        "IPHLPAPI.DLL",
+        "KERNEL32.dll",
+        "MSIMG32.dll",
+        "ncrypt.dll",
+        "ole32.dll",
+        "OLEAUT32.dll",
+        "SHELL32.dll",
+        "SHLWAPI.dll",
+        "USER32.dll",
+        "WINMM.dll",
+        "WS2_32.dll"
+      ]
+    },
+    "media-tools/ggml-base.dll": {
+      "bytes": 528384,
+      "sha256": "3eefa9a256a7ef4774ec07d553ccecb771498a92000d0db7ab3443d79b795e86",
+      "machine": "AMD64",
+      "format": "PE32+",
+      "imports": [
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-utility-l1-1-0.dll",
+        "KERNEL32.dll",
+        "MSVCP140.dll",
+        "VCRUNTIME140.dll",
+        "VCRUNTIME140_1.dll"
+      ]
+    },
+    "media-tools/ggml-cpu.dll": {
+      "bytes": 603648,
+      "sha256": "91240f9a352783312430e3b5d816621675afd2dfb9df28161bea235c4b7f1ce3",
+      "machine": "AMD64",
+      "format": "PE32+",
+      "imports": [
+        "ADVAPI32.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "ggml-base.dll",
+        "KERNEL32.dll",
+        "MSVCP140.dll",
+        "VCOMP140.DLL",
+        "VCRUNTIME140.dll",
+        "VCRUNTIME140_1.dll"
+      ]
+    },
+    "media-tools/ggml.dll": {
+      "bytes": 67584,
+      "sha256": "4f681cca3014879e623b9b44f69b0864a9ddd530c32ce05c106105f4eec0897a",
+      "machine": "AMD64",
+      "format": "PE32+",
+      "imports": [
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "ggml-base.dll",
+        "ggml-cpu.dll",
+        "KERNEL32.dll",
+        "MSVCP140.dll",
+        "VCRUNTIME140.dll",
+        "VCRUNTIME140_1.dll"
+      ]
+    },
+    "media-tools/msvcp140.dll": {
+      "bytes": 643512,
+      "sha256": "7c26614e1d733892c2deac7e245ce115504b1d80592dd0a01b08e3e5a55f89ca",
+      "machine": "AMD64",
+      "format": "PE32+",
+      "imports": [
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-utility-l1-1-0.dll",
+        "KERNEL32.dll",
+        "VCRUNTIME140.dll",
+        "VCRUNTIME140_1.dll"
+      ]
+    },
+    "media-tools/node.exe": {
+      "bytes": 93580104,
+      "sha256": "ba4e6d110e8c1592a1ecd390f6b05f3da124b13871a5be62b341a07a853c6c32",
+      "machine": "AMD64",
+      "format": "PE32+",
+      "imports": [
+        "ADVAPI32.dll",
+        "CRYPT32.dll",
+        "dbghelp.dll",
+        "IPHLPAPI.DLL",
+        "KERNEL32.dll",
+        "ole32.dll",
+        "SHELL32.dll",
+        "USER32.dll",
+        "USERENV.dll",
+        "WINMM.dll",
+        "WS2_32.dll"
+      ]
+    },
+    "media-tools/vcomp140.dll": {
+      "bytes": 212920,
+      "sha256": "95d4ce4a6802d1e18b5e0e1722cc30ea72ca7e033f83828f05c0b7b993fe7cbf",
+      "machine": "AMD64",
+      "format": "PE32+",
+      "imports": [
+        "KERNEL32.dll"
+      ]
+    },
+    "media-tools/vcruntime140.dll": {
+      "bytes": 178616,
+      "sha256": "d1f4225df2cd877dbf130d5668a021dce3f94118455ff5ec952061c30afc9ce7",
+      "machine": "AMD64",
+      "format": "PE32+",
+      "imports": [
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "KERNEL32.dll"
+      ]
+    },
+    "media-tools/vcruntime140_1.dll": {
+      "bytes": 50112,
+      "sha256": "a7146c08f89fe5b04541ab507cdb59ff7b44534d4ba3c668a426c6450a03434e",
+      "machine": "AMD64",
+      "format": "PE32+",
+      "imports": [
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "KERNEL32.dll",
+        "VCRUNTIME140.dll"
+      ]
+    },
+    "media-tools/whisper-cli.exe": {
+      "bytes": 481280,
+      "sha256": "dc1648751878e91acb5cfaa69bd85cff64ede44497a108844ad9d4f106cb14e8",
+      "machine": "AMD64",
+      "format": "PE32+",
+      "imports": [
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-utility-l1-1-0.dll",
+        "ggml.dll",
+        "KERNEL32.dll",
+        "MSVCP140.dll",
+        "VCRUNTIME140.dll",
+        "VCRUNTIME140_1.dll",
+        "whisper.dll"
+      ]
+    },
+    "media-tools/whisper.dll": {
+      "bytes": 483840,
+      "sha256": "4155edb6868810b56423cb0089fee85f4e8739fb86053b269f4e7c6350ec61ff",
+      "machine": "AMD64",
+      "format": "PE32+",
+      "imports": [
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-utility-l1-1-0.dll",
+        "ggml-base.dll",
+        "ggml.dll",
+        "KERNEL32.dll",
+        "MSVCP140.dll",
+        "VCRUNTIME140.dll",
+        "VCRUNTIME140_1.dll"
+      ]
+    },
+    "media-tools/yt-dlp.exe": {
+      "bytes": 17840399,
+      "sha256": "66674953fe251b89f4d08c5f0e35e0728679bd67ab3d7d05c0562af101dd3e7a",
+      "machine": "AMD64",
+      "format": "PE32+",
+      "imports": [
+        "ADVAPI32.dll",
+        "KERNEL32.dll",
+        "msvcrt.dll",
+        "USER32.dll"
+      ]
+    }
+  },
+  "speechBackend": "CPU; AVX2, FMA and F16C required; no CUDA or RTX requirement",
+  "visualCRuntime": "Four unmodified app-local x64 DLLs from the Microsoft-signed redistributable; no system installation needed",
+  "runtimeExecutionTested": false
+}
