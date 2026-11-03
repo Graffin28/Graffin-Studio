@@ -1,0 +1,656 @@
+--- a/src/App.tsx
++++ b/src/App.tsx
+@@ -55,7 +55,7 @@
+       <button className="source-select" onClick={() => onSelect(item.id)} title={item.path} aria-label={`Показать ${item.name}`}><img src={assetUrl(item.thumbnail)} alt="" /><span><strong>{item.name}</strong><small>{time(item.duration)} <span>·</span> {item.width}×{item.height}{item.hasAudio && <Volume2 size={11} />}</small></span></button>
+       <button className="icon-button remove-file" disabled={disabled} onClick={() => onRemove(item.id)} title="Убрать из списка" aria-label={`Убрать ${item.name}`}><X size={14} /></button>
+     </div>)}</div> : <div className="source-empty"><Film size={30} strokeWidth={1.2} /><p>{upper ? 'История, стрим, разговор' : 'Фон для второго экрана'}</p></div>}
+-    <div className="source-actions"><button className="add-source" disabled={disabled || pending} onClick={onAdd}>{pending ? <Loader2 size={16} className="spin" /> : <Plus size={16} />}{pending ? 'Загружаем…' : 'Из файлов'}</button><button className="source-link" aria-label={upper ? 'Основные видео из папки' : 'Фоновые видео из папки'} title="Добавить видео из папки" disabled={disabled || pending} onClick={onFolder}><FolderOpen size={16} /></button><button className="source-link" aria-label={upper ? 'Основное видео по ссылке' : 'Фоновое видео по ссылке'} title="Добавить по ссылке" disabled={disabled || pending} onClick={onLink}><Link2 size={17} /></button></div>{sourceDir && <p className="source-folder-path" title={sourceDir}>Последняя папка: {sourceDir.split(/[\\/]/).filter(Boolean).pop()}</p>}
++    <div className="source-actions"><button className="add-source" disabled={disabled || pending} onClick={onAdd}>{pending ? <Loader2 size={16} className="spin" /> : <Plus size={16} />}{pending ? 'Загружаем…' : 'Из файлов'}</button><button className="source-link" aria-label={upper ? 'Основные видео из папки' : 'Фоновые видео из папки'} title="Добавить видео из папки" disabled={disabled || pending} onClick={onFolder}><FolderOpen size={16} /></button><button className="source-link" aria-label={upper ? 'Основное видео по ссылке' : 'Фоновое видео по ссылке'} title="Добавить по ссылке" disabled={disabled || pending} onClick={onLink}><Link2 size={17} /></button></div>{sourceDir && <p className="source-folder-path" title={sourceDir}>Последняя папка: {sourceDir.split('/').filter(Boolean).pop()}</p>}
+   </section>;
+ }
+ 
+@@ -306,7 +306,7 @@
+   const chooseSubtitleVideo = async () => {
+     try { const path = await open({ title: 'Редактировать субтитры готового ролика', multiple: false, filters: [{ name: 'Готовое видео', extensions: ['mp4'] }], defaultPath: settings.outputDir || undefined }); if (typeof path === 'string') setEditingPath(path); } catch (error) { setError(message(error)); }
+   };
+-  const openOutput = async () => { try { await api.openFolder(job.outputs[0] || settings.outputDir); } catch (e) { setError(message(e)); } };
++  const openOutput = async () => { try { await api.openFolder(job.outputs[0]?.replace(/\/[^/]+$/, '') || settings.outputDir); } catch (e) { setError(message(e)); } };
+   const selectedBanner: BannerAsset | undefined = settings.bannerLibrary.find(item => item.path === settings.bannerPath);
+   const bannerKind = selectedBanner?.kind || (/\.(mp4|mov|webm)$/i.test(settings.bannerPath) ? 'video' : 'image');
+   const banner = assetUrl(selectedBanner?.path || settings.bannerPath || boot?.bannerPreview || '/banner.png');
+@@ -315,7 +315,7 @@
+   const jobActive = job.status !== 'idle';
+ 
+   return <div className="app-shell montage-only">
+-    <div className="studio-body"><header className="app-header"><div className="studio-brand-heading"><img src="/graffin-mark.png" alt="" /><div className="workspace-title"><span className="workspace-kicker">Graffin Studio</span><h1>Монтаж</h1></div></div><div className="header-session-meta"><span className={`save-pill ${saveState.startsWith('Не удалось') ? 'has-error' : ''}`} title={saveState}>{saveState.startsWith('Не удалось') ? 'Ошибка сохранения' : saveState ? 'Сохранено' : 'Готово к работе'}</span><button className="header-output" onClick={chooseOutput} disabled={busy} title={settings.outputDir || 'Выбрать папку экспорта'}><FolderOpen size={15} aria-hidden="true" /><span>{settings.outputDir.split(/[\\/]/).filter(Boolean).pop() || 'Папка экспорта'}</span></button></div></header>
++    <div className="studio-body"><header className="app-header"><div className="studio-brand-heading"><img src="/graffin-mark.png" alt="" /><div className="workspace-title"><span className="workspace-kicker">Graffin Studio</span><h1>Монтаж</h1></div></div><div className="header-session-meta"><span className={`save-pill ${saveState.startsWith('Не удалось') ? 'has-error' : ''}`} title={saveState}>{saveState.startsWith('Не удалось') ? 'Ошибка сохранения' : saveState ? 'Сохранено' : 'Готово к работе'}</span><button className="header-output" onClick={chooseOutput} disabled={busy} title={settings.outputDir || 'Выбрать папку экспорта'}><FolderOpen size={15} aria-hidden="true" /><span>{settings.outputDir.split('/').filter(Boolean).pop() || 'Папка экспорта'}</span></button></div></header>
+     {!native && <div className="demo-notice"><Monitor size={16} /><span>Предпросмотр интерфейса. Откройте приложение для работы с файлами.</span></div>}
+     {error && <div className="error-bar" role="alert"><AlertCircle size={17} /><span>{error}</span><button className="icon-button" aria-label="Закрыть сообщение" onClick={() => setError('')}><X size={16} /></button></div>}
+     {!boot && !error && <div className="loading-app"><Loader2 size={18} className="spin" />Подготавливаем студию…</div>}
+@@ -356,7 +356,7 @@
+           {top.length > 0 && <div className={`capacity-note ${settings.cutMode !== 'smart' && settings.count > capacity ? 'capacity-warning' : ''}`}><Clock3 size={13} /><span>{settings.cutMode === 'smart' ? 'Перед сборкой можно просмотреть и выбрать до 60 найденных моментов' : `Доступно ${capacity} без повторов`}</span></div>}
+           <label className="field-label">Порядок фрагментов<select value={settings.order} disabled={busy} onChange={e => change('order', e.target.value as Settings['order'])}><option value="random">Перемешивать</option><option value="sequential">По порядку</option></select></label>
+           <label className="field-label">Качество экспорта<select value={settings.resolution} disabled={busy} onChange={e => change('resolution', Number(e.target.value))}><option value={1080}>1080 × 1920 · Full HD</option><option value={720}>720 × 1280 · быстрее</option></select></label>
+-        </section><section className="settings-section output-settings"><h3>Сохранение</h3><button className="folder-picker" disabled={busy} onClick={chooseOutput} title={settings.outputDir || 'Выбрать папку'}><FolderOpen size={16} /><span>{settings.outputDir ? settings.outputDir.split(/[\\/]/).filter(Boolean).slice(-2).join(' / ') : 'Выбрать папку'}</span><ChevronDown size={13} /></button></section></div>
++        </section><section className="settings-section output-settings"><h3>Сохранение</h3><button className="folder-picker" disabled={busy} onClick={chooseOutput} title={settings.outputDir || 'Выбрать папку'}><FolderOpen size={16} /><span>{settings.outputDir ? settings.outputDir.split('/').filter(Boolean).slice(-2).join(' / ') : 'Выбрать папку'}</span><ChevronDown size={13} /></button></section></div>
+ 
+       </aside>
+     </main>
+--- a/src/FolderLocations.tsx
++++ b/src/FolderLocations.tsx
+@@ -11,5 +11,5 @@
+       if (typeof path === 'string') onChange({[key]:path});
+     } catch (error) { onError(String(error)); }
+   };
+-  return <section className="folder-locations" aria-label="Папки проекта"><h3><FolderOpen size={15} aria-hidden="true" />Папки</h3>{([{key:'importDir',name:'Видео по ссылкам',icon:Download},{key:'outputDir',name:'Готовые ролики',icon:Film}] as const).map(item => <div className="folder-location" key={item.key}><div className="folder-location-heading"><span><item.icon size={13} aria-hidden="true" />{item.name}</span><button className="icon-button" type="button" aria-label={`Открыть папку: ${item.name}`} title="Открыть папку в проводнике" disabled={disabled || !native || !settings[item.key]} onClick={() => void api.openFolder(settings[item.key]).catch(error => onError(String(error)))}><ExternalLink size={14} aria-hidden="true" /></button></div><button className="folder-location-path" type="button" aria-label={`Выбрать папку: ${item.name}`} disabled={disabled || !native} title={settings[item.key] || 'Выбрать папку'} onClick={() => choose(item.key)}><span>{settings[item.key] || 'Выбрать папку'}</span><FolderOpen size={14} aria-hidden="true" /></button></div>)}</section>;
++  return <section className="folder-locations" aria-label="Папки проекта"><h3><FolderOpen size={15} aria-hidden="true" />Папки</h3>{([{key:'importDir',name:'Видео по ссылкам',icon:Download},{key:'outputDir',name:'Готовые ролики',icon:Film}] as const).map(item => <div className="folder-location" key={item.key}><div className="folder-location-heading"><span><item.icon size={13} aria-hidden="true" />{item.name}</span><button className="icon-button" type="button" aria-label={`Открыть папку: ${item.name}`} title="Открыть папку в Finder" disabled={disabled || !native || !settings[item.key]} onClick={() => void api.openFolder(settings[item.key]).catch(error => onError(String(error)))}><ExternalLink size={14} aria-hidden="true" /></button></div><button className="folder-location-path" type="button" aria-label={`Выбрать папку: ${item.name}`} disabled={disabled || !native} title={settings[item.key] || 'Выбрать папку'} onClick={() => choose(item.key)}><span>{settings[item.key] || 'Выбрать папку'}</span><FolderOpen size={14} aria-hidden="true" /></button></div>)}</section>;
+ }
+--- a/src/SubtitleEditor.tsx
++++ b/src/SubtitleEditor.tsx
+@@ -53,7 +53,7 @@
+   const current = words[selected];
+   const previewUrl = doc ? assetUrl(doc.previewPath) : '';
+   const videoUrl = previewUrl && !/^(blob:|data:)/.test(previewUrl) ? `${previewUrl}${previewUrl.includes('?') ? '&' : '?'}revision=${encodeURIComponent(doc?.revision || 'legacy')}` : previewUrl;
+-  return <div className="editor-scrim"><section ref={dialog} className="subtitle-editor" role="dialog" aria-modal="true" aria-labelledby="subtitle-editor-title"><header className="subtitle-editor-heading"><div><h2 id="subtitle-editor-title">Редактор субтитров</h2><p>{doc?.name || path.split(/[\\/]/).pop()}</p></div><button ref={closeButton} className="icon-button" aria-label="Закрыть редактор субтитров" disabled={saving} onClick={close}><X size={21} /></button></header>
++  return <div className="editor-scrim"><section ref={dialog} className="subtitle-editor" role="dialog" aria-modal="true" aria-labelledby="subtitle-editor-title"><header className="subtitle-editor-heading"><div><h2 id="subtitle-editor-title">Редактор субтитров</h2><p>{doc?.name || path.split('/').pop()}</p></div><button ref={closeButton} className="icon-button" aria-label="Закрыть редактор субтитров" disabled={saving} onClick={close}><X size={21} /></button></header>
+     {loading ? <div className="editor-loading"><Loader2 className="spin" size={26} /><span>Открываем слова и видео…</span></div> : <><div className="subtitle-editor-body"><div className="editor-video-pane">{doc && <video ref={video} key={`${doc.previewPath}-${doc.revision}`} src={videoUrl} controls playsInline preload="metadata" onTimeUpdate={event => setClock(contentTime(event.currentTarget.currentTime))} />}<span className="editor-play-clock">{format(clock)} / {format(doc?.duration || 0)}</span>{!!doc?.pauseDuration && <p className="setting-help">Время слов указано без баннера-паузы. Плеер учитывает вставку.</p>}</div>
+     <div className="editor-word-pane"><label className="editor-word-search"><Search size={16} /><input aria-label="Найти слово в субтитрах" value={query} placeholder="Найти слово" onChange={event => setQuery(event.target.value)} /></label>{doc && !doc.editable && <div className="editor-readonly"><AlertCircle size={18} /><p>{doc.reason || 'Этот ролик доступен только для просмотра.'}</p></div>}
+     <div className="editor-word-tools"><span>{words.length} слов</span><button className="secondary-button" disabled={!editable || words.length >= 5000} onClick={addWord}><Plus size={14} />Добавить слово</button></div><div className="editor-word-grid" aria-label="Слова субтитров">{words.map((word, index) => !query || word.text.toLocaleLowerCase().includes(query.toLocaleLowerCase()) ? <button key={index} type="button" aria-label={`Слово ${index + 1}: ${word.text}`} aria-pressed={index === selected} disabled={saving} className={`${index === selected ? 'selected' : ''} ${word.start <= clock && word.end > clock ? 'playing' : ''}`} onClick={() => choose(index)}><span>{word.text || '…'}</span><small>{format(word.start)}</small></button> : null)}{!words.length && <p className="editor-empty">{doc?.editable ? 'В этом фрагменте нет распознанных слов.' : 'Слова доступны у роликов, созданных в новой версии.'}</p>}</div>
+--- a/src-tauri/src/download_runtime.rs
++++ b/src-tauri/src/download_runtime.rs
+@@ -1,17 +1,4 @@
+ //! A pinned runtime shared by app updates, kept outside the application bundle.
+-#[cfg(windows)]
+-pub fn shutdown() {}
+-#[cfg(windows)]
+-pub fn node(app: &tauri::AppHandle) -> Result<std::path::PathBuf, String> {
+-    use std::sync::atomic::Ordering;
+-    use tauri::Manager;
+-    if app.state::<crate::AppState>().closing.load(Ordering::SeqCst) { return Err("Приложение завершает работу.".into()); }
+-    crate::resource(app, "media-tools/node.exe")
+-}
+-#[cfg(not(windows))]
+-pub use native::{node, shutdown};
+-#[cfg(not(windows))]
+-mod native {
+ use serde::Deserialize;
+ use sha2::{Digest, Sha256};
+ use std::{fs, io::Read, path::{Path, PathBuf}, process::Command, sync::{Mutex, atomic::Ordering}, time::Duration};
+@@ -60,5 +47,3 @@
+     if control.run_cancellable(command, Duration::from_secs(30)).is_err() || digest(&node).ok().as_deref() != Some(&m.binary_sha256) { return Err("Компонент загрузки видео не прошёл проверку. Повторите загрузку.".into()); }
+     Ok(node)
+ }
+-
+-}
+--- a/src-tauri/src/engine.rs
++++ b/src-tauri/src/engine.rs
+@@ -199,7 +199,7 @@
+     pub fn cancel(&self) {
+         self.cancelled.store(true, Ordering::SeqCst);
+         if let Ok(mut guard) = self.child.lock() {
+-            if let Some(child) = guard.as_mut() { crate::platform::terminate_child(child); }
++            if let Some(child) = guard.as_mut() { let _ = child.kill(); }
+         }
+     }
+     pub fn is_cancelled(&self) -> bool { self.cancelled.load(Ordering::SeqCst) }
+@@ -209,7 +209,6 @@
+     /// block, and every termination path reaps the process.
+     pub(crate) fn run_cancellable(&self, mut command: Command, timeout: Duration) -> Result<String, String> {
+         if self.is_cancelled() { return Err("Экспорт отменён".into()); }
+-        crate::platform::hide_console(&mut command);
+         let mut child = command.stdin(Stdio::null()).stdout(Stdio::piped()).stderr(Stdio::piped())
+             .spawn().map_err(|e| format!("Не удалось запустить обработку: {e}"))?;
+         let stdout = child.stdout.take().ok_or("Нет канала вывода обработки")?;
+@@ -219,11 +218,11 @@
+         {
+             let mut guard = self.child.lock().map_err(|_| "Не удалось управлять обработкой")?;
+             if guard.is_some() {
+-                crate::platform::terminate_child(&mut child); let _ = child.wait();
++                let _ = child.kill(); let _ = child.wait();
+                 let _ = output_reader.join(); let _ = error_reader.join();
+                 return Err("Другая обработка уже выполняется".into());
+             }
+-            if self.is_cancelled() { crate::platform::terminate_child(&mut child); }
++            if self.is_cancelled() { let _ = child.kill(); }
+             *guard = Some(child);
+         }
+         let deadline = Instant::now() + timeout;
+@@ -231,13 +230,13 @@
+             let mut guard = self.child.lock().map_err(|_| "Не удалось прочитать процесс обработки")?;
+             let child = guard.as_mut().ok_or("Процесс обработки потерян")?;
+             if self.is_cancelled() || Instant::now() >= deadline {
+-                crate::platform::terminate_child(child); let _ = child.wait(); *guard = None;
++                let _ = child.kill(); let _ = child.wait(); *guard = None;
+                 break Err(if self.is_cancelled() { "Экспорт отменён".to_string() } else { "Обработка превысила время ожидания".into() });
+             }
+             match child.try_wait() {
+                 Ok(Some(status)) => { *guard = None; break Ok(status); }
+                 Ok(None) => { drop(guard); thread::sleep(Duration::from_millis(40)); }
+-                Err(e) => { crate::platform::terminate_child(child); let _ = child.wait(); *guard = None; break Err(format!("Ошибка обработки: {e}")); }
++                Err(e) => { let _ = child.kill(); let _ = child.wait(); *guard = None; break Err(format!("Ошибка обработки: {e}")); }
+             }
+         };
+         let output = output_reader.join().unwrap_or_default();
+@@ -311,7 +310,6 @@
+ }
+ 
+ fn bounded_command(mut command: Command, timeout: Duration) -> Result<(bool, String), String> {
+-    crate::platform::hide_console(&mut command);
+     let mut child = command.stdin(Stdio::null()).stdout(Stdio::null()).stderr(Stdio::piped())
+         .spawn().map_err(|e| format!("Не удалось запустить видеодвижок: {e}"))?;
+     let stderr = child.stderr.take().ok_or("Нет диагностического канала FFmpeg")?;
+@@ -320,9 +318,9 @@
+     loop {
+         match child.try_wait() {
+             Ok(Some(status)) => return Ok((status.success(), reader.join().unwrap_or_default())),
+-            Err(e) => { crate::platform::terminate_child(&mut child); let _ = child.wait(); let _ = reader.join(); return Err(format!("Ошибка процесса FFmpeg: {e}")); }
++            Err(e) => { let _ = child.kill(); let _ = child.wait(); let _ = reader.join(); return Err(format!("Ошибка процесса FFmpeg: {e}")); }
+             Ok(None) if Instant::now() >= deadline => {
+-                crate::platform::terminate_child(&mut child); let _ = child.wait(); let _ = reader.join();
++                let _ = child.kill(); let _ = child.wait(); let _ = reader.join();
+                 return Err("Видео не ответило вовремя. Проверьте, что файл полностью скачан и доступен локально".into());
+             }
+             Ok(None) => thread::sleep(Duration::from_millis(25)),
+@@ -913,20 +911,7 @@
+     if result == 0 { Ok(()) } else { Err(format!("Не сохранить готовый ролик: {}", std::io::Error::last_os_error())) }
+ }
+ 
+-#[cfg(windows)]
+-pub(crate) fn publish_output(partial: &Path, output: &Path) -> Result<(), String> {
+-    use std::os::windows::ffi::OsStrExt;
+-    #[link(name = "kernel32")]
+-    unsafe extern "system" { fn MoveFileW(existing: *const u16, destination: *const u16) -> i32; }
+-    let from: Vec<u16> = partial.as_os_str().encode_wide().chain(Some(0)).collect();
+-    let to: Vec<u16> = output.as_os_str().encode_wide().chain(Some(0)).collect();
+-    if from[..from.len()-1].contains(&0) || to[..to.len()-1].contains(&0) { return Err("Некорректный путь экспорта.".into()); }
+-    // MoveFileW refuses an existing destination and works on NTFS and exFAT.
+-    if unsafe { MoveFileW(from.as_ptr(), to.as_ptr()) } != 0 { Ok(()) }
+-    else { Err(format!("Не сохранить готовый ролик: {}", std::io::Error::last_os_error())) }
+-}
+-
+-#[cfg(all(not(target_os = "macos"), not(windows)))]
++#[cfg(not(target_os = "macos"))]
+ pub(crate) fn publish_output(partial: &Path, output: &Path) -> Result<(), String> {
+     // This application ships for macOS. The conservative fallback keeps the
+     // standalone engine testable on other platforms without replacing files.
+@@ -1045,7 +1030,6 @@
+             .args(["-map", "[v]", "-map", "[a]", "-t"]).arg(format!("{output_duration:.6}"))
+             .args(["-r", "30", "-c:v", "libx264", "-preset", "veryfast", "-crf", "20", "-threads", "4", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "160k", "-ar", "48000", "-ac", "2", "-movflags", "+faststart", "-map_metadata", "-1", "-sn", "-dn", "-progress", "pipe:1", "-nostats"])
+             .arg(&partial).stdin(Stdio::null()).stdout(Stdio::piped()).stderr(Stdio::piped());
+-        crate::platform::hide_console(&mut command);
+         let mut child = command.spawn().map_err(|e| format!("Не удалось запустить экспорт: {e}"))?;
+         let stdout = child.stdout.take().ok_or("Не удалось получить прогресс экспорта")?;
+         let stderr = child.stderr.take().ok_or("Не удалось получить журнал экспорта")?;
+@@ -1064,8 +1048,8 @@
+         let error_reader = thread::spawn(move || read_tail(stderr, 16_384));
+         {
+             let mut guard = control.child.lock().map_err(|_| "Не удалось управлять процессом экспорта")?;
+-            if guard.is_some() { crate::platform::terminate_child(&mut child); let _ = child.wait(); return Err("Другой экспорт уже выполняется".into()); }
+-            if control.is_cancelled() { crate::platform::terminate_child(&mut child); }
++            if guard.is_some() { let _ = child.kill(); let _ = child.wait(); return Err("Другой экспорт уже выполняется".into()); }
++            if control.is_cancelled() { let _ = child.kill(); }
+             *guard = Some(child);
+         }
+         on_progress(0.0);
+@@ -1076,14 +1060,14 @@
+             let poll = {
+                 let mut guard = control.child.lock().map_err(|_| "Не удалось прочитать процесс экспорта")?;
+                 let child = guard.as_mut().ok_or("Процесс экспорта потерян")?;
+-                if control.is_cancelled() { crate::platform::terminate_child(child); }
++                if control.is_cancelled() { let _ = child.kill(); }
+                 child.try_wait()
+             };
+             match poll {
+                 Ok(Some(status)) => break status,
+                 Ok(None) => thread::sleep(Duration::from_millis(40)),
+                 Err(e) => {
+-                    if let Ok(mut guard) = control.child.lock() { if let Some(child) = guard.as_mut() { crate::platform::terminate_child(child); let _ = child.wait(); } *guard = None; }
++                    if let Ok(mut guard) = control.child.lock() { if let Some(child) = guard.as_mut() { let _ = child.kill(); let _ = child.wait(); } *guard = None; }
+                     let _ = progress_reader.join(); let _ = error_reader.join();
+                     return Err(format!("Не удалось дождаться экспорта: {e}"));
+                 }
+@@ -1137,7 +1121,7 @@
+ 
+     #[test]
+     fn banner_quiet_and_fade_settings_are_compatible_bounded_and_cancelled() {
+-        let mut value=serde_json::to_value(Settings{output_dir:std::env::temp_dir().to_string_lossy().into_owned(),..settings()}).unwrap();value.as_object_mut().unwrap().remove("interruptionFade");
++        let mut value=serde_json::to_value(Settings{output_dir:"/tmp".into(),..settings()}).unwrap();value.as_object_mut().unwrap().remove("interruptionFade");
+         let restored:Settings=serde_json::from_value(value).unwrap();assert_eq!(restored.interruption_fade,0.0);
+         for bad in [f64::NAN,-0.1,2.1] {assert!(validate_settings(&Settings{interruption_fade:bad,..restored.clone()}).is_err());}
+         assert!(validate_settings(&Settings{interruption_timing:"quiet".into(),interruption_fade:2.0,..restored}).is_ok());
+@@ -1181,7 +1165,7 @@
+ 
+     #[test]
+     fn caption_group_settings_migrate_and_validate() {
+-        let mut json = serde_json::to_value(Settings { output_dir:std::env::temp_dir().to_string_lossy().into_owned(), ..settings() }).unwrap();
++        let mut json = serde_json::to_value(Settings { output_dir:"/tmp".into(), ..settings() }).unwrap();
+         for key in ["subtitleWordsPerLine", "subtitleAnimation", "subtitleHighlightEnabled", "subtitleHighlightColor"] { json.as_object_mut().unwrap().remove(key); }
+         let restored: Settings = serde_json::from_value(json).unwrap();
+         assert_eq!(restored.subtitle_words_per_line, 1); assert_eq!(restored.subtitle_animation, "pop");
+@@ -1300,7 +1284,7 @@
+         settings.interruption_timing="fixed".into();settings.interruption_start=0.0;assert!(interruption_time(&settings,&clip).unwrap().at>0.0);
+         settings.interruption_timing="middle".into(); assert_eq!(interruption_time(&settings,&clip).unwrap().at,2.5);
+         assert_eq!(content_pause(&settings,&clip),Some((2.5,3.0)));settings.interruption_enabled=false;assert!(content_pause(&settings,&clip).is_none());settings.interruption_enabled=true;
+-        settings.output_dir=std::env::temp_dir().to_string_lossy().into_owned(); settings.music_start=f64::NAN; assert!(validate_settings(&settings).is_err());
++        settings.output_dir="/tmp".into(); settings.music_start=f64::NAN; assert!(validate_settings(&settings).is_err());
+         settings.music_start=0.0; settings.single_scale=0.49;assert!(validate_settings(&settings).is_err());
+     }
+ 
+@@ -1411,7 +1395,7 @@
+ 
+     #[test]
+     fn refuses_nonfinite_settings_and_invalid_bounds() {
+-        let mut s = Settings { output_dir: std::env::temp_dir().to_string_lossy().into_owned(), ..settings() };
++        let mut s = Settings { output_dir: "/tmp".into(), ..settings() };
+         assert!(validate_settings(&s).is_ok()); s.top_volume = f64::NAN; assert!(validate_settings(&s).is_err());
+         s.top_volume = 1.0; s.top_split = 0.0; assert!(validate_settings(&s).is_err());
+         s.top_split = 0.5; s.banner_bottom = 601; assert!(validate_settings(&s).is_err());
+@@ -1464,7 +1448,7 @@
+         let mut families=HashSet::new();
+         for slug in ["manrope","montserrat","rubik","oswald","russo"] {
+             let (family,file)=subtitle_font(slug).unwrap();families.insert(family.clone());
+-            let value=Settings {subtitle_font:slug.into(),subtitle_color:"#12ABEF".into(),output_dir:std::env::temp_dir().to_string_lossy().into_owned(),..settings()};
++            let value=Settings {subtitle_font:slug.into(),subtitle_color:"#12ABEF".into(),output_dir:"/tmp".into(),..settings()};
+             assert!(validate_settings(&value).is_ok());
+             let ass=subtitle_ass(&value,2.,srt).unwrap();assert!(ass.contains(&format!("Style: Seam,{family},")));assert!(ass.contains("&H00EFAB12"));
+             let path=Path::new(env!("CARGO_MANIFEST_DIR")).join("resources/fonts").join(file);assert!(path.is_file());
+@@ -1545,7 +1529,6 @@
+         let _ = fs::remove_dir_all(dir);
+     }
+ 
+-    #[cfg(unix)]
+     #[test]
+     fn auxiliary_process_is_cancelled_and_reaped_before_export_can_continue() {
+         let control = RenderControl::new(); let cancel = control.clone();
+@@ -1556,18 +1539,6 @@
+         trigger.join().unwrap(); assert!(started.elapsed() < Duration::from_secs(3)); assert!(control.child.lock().unwrap().is_none());
+         let control = RenderControl::new(); let mut command = Command::new("/bin/sleep"); command.arg("10");
+         assert!(control.run_cancellable(command, Duration::from_millis(100)).unwrap_err().contains("время ожидания")); assert!(control.child.lock().unwrap().is_none());
+-    }
+-
+-    #[cfg(windows)]
+-    #[test]
+-    fn windows_auxiliary_process_is_cancelled_and_reaped() {
+-        let root = PathBuf::from(std::env::var_os("SystemRoot").unwrap()).join("System32/ping.exe");
+-        let control = RenderControl::new(); let cancel = control.clone();
+-        let trigger = thread::spawn(move || { thread::sleep(Duration::from_millis(100)); cancel.cancel(); });
+-        let mut command = Command::new(root); command.args(["-n", "12", "127.0.0.1"]);
+-        let started = Instant::now();
+-        assert!(control.run_cancellable(command, Duration::from_secs(15)).unwrap_err().contains("отменён"));
+-        trigger.join().unwrap(); assert!(started.elapsed() < Duration::from_secs(5)); assert!(control.child.lock().unwrap().is_none());
+     }
+ 
+     #[test]
+--- a/src-tauri/src/lib.rs
++++ b/src-tauri/src/lib.rs
+@@ -1,4 +1,3 @@
+-mod platform;
+ mod engine;
+ mod download_runtime;
+ mod render_history;
+@@ -13,7 +12,7 @@
+ 
+ use engine::{BatchRequest,Media,Settings,RenderControl};
+ use serde::Serialize;
+-use std::{fs,path::{Path,PathBuf},sync::{Mutex,atomic::{AtomicBool,Ordering}},time::{SystemTime,UNIX_EPOCH}};
++use std::{fs,path::{Path,PathBuf},process::Command,sync::{Mutex,atomic::{AtomicBool,Ordering}},time::{SystemTime,UNIX_EPOCH}};
+ use tauri::{Manager,AppHandle};
+ 
+ #[derive(Clone,Serialize)]
+@@ -33,7 +32,6 @@
+ 
+ fn stamp()->String {SystemTime::now().duration_since(UNIX_EPOCH).unwrap_or_default().as_millis().to_string()}
+ fn resource(app:&AppHandle,name:&str)->Result<PathBuf,String> {
+-    let name=platform::resource_name(name);
+     let p=app.path().resource_dir().map_err(|e|e.to_string())?.join("resources").join(name);
+     if p.is_file(){return Ok(p)}
+     if cfg!(debug_assertions){let p=Path::new(env!("CARGO_MANIFEST_DIR")).join("resources").join(name);if p.is_file(){return Ok(p)}}
+@@ -212,7 +210,8 @@
+     let p=PathBuf::from(path);if !p.is_absolute(){return Err("Нужен полный путь к папке.".into())}
+     let folder=if p.is_file(){p.parent().ok_or("Папка не найдена")?.to_path_buf()}else{p};
+     fs::create_dir_all(&folder).map_err(|e|e.to_string())?;
+-    platform::open_folder(&folder)
++    let status=Command::new("/usr/bin/open").arg(&folder).status().map_err(|e|e.to_string())?;
++    if status.success(){Ok(())}else{Err("Не удалось открыть папку Finder.".into())}
+ }
+ 
+ fn shutdown(app:AppHandle){
+@@ -255,7 +254,7 @@
+ pub fn run(){
+     tauri::Builder::default().plugin(tauri_plugin_dialog::init()).manage(AppState::default())
+         .manage(moments::MomentsState::default())
+-        .setup(|app| { #[cfg(target_os="macos")] install_menu(app.handle())?; let _=font_library::configure(app.handle()); media_tools::configure(app.handle())?; Ok(()) })
++        .setup(|app| { #[cfg(target_os="macos")] install_menu(app.handle())?; let _=font_library::configure(app.handle()); Ok(()) })
+         .on_menu_event(|app,event|{if event.id().as_ref()=="barsik-quit" {shutdown(app.clone());}})
+         .invoke_handler(tauri::generate_handler![bootstrap,inspect_media,inspect_media_folder,save_settings,get_job,cancel_batch,start_batch,render_preview,open_folder,
+             subtitle_editor::subtitle_document,subtitle_editor::subtitle_save,font_library::font_library,font_library::import_font,
+--- a/src-tauri/src/media_tools.rs
++++ b/src-tauri/src/media_tools.rs
+@@ -10,15 +10,8 @@
+ const MODEL_HASH: &str = "ae85e4a935d7a567bd102fe55afc16bb595bdb618e11b2fc7591bc08120411bb";
+ const MODEL_BYTES: u64 = 190_085_487;
+ const SPEECH_CONTEXT: f64 = 1.5;
+-#[cfg(windows)]
+-const WHISPER_VERSION: &str = "v1.8.2";
+-#[cfg(not(windows))]
+-const WHISPER_VERSION: &str = "v1.9.5";
+-#[cfg(not(windows))]
+ const DOWNLOADER_URL: &str = "https://github.com/yt-dlp/yt-dlp/releases/download/2026.08.19/yt-dlp_macos";
+-#[cfg(not(windows))]
+ const DOWNLOADER_HASH: &str = "0f192b7ec147ab6288885d6351d9ab67367640029b4377576ef46dd79cf7b202";
+-#[cfg(not(windows))]
+ const DOWNLOADER_BYTES: u64 = 37_146_048;
+ static INSTALL: Mutex<()> = Mutex::new(());
+ static IMPORT_BUSY: AtomicBool = AtomicBool::new(false);
+@@ -34,29 +27,12 @@
+     pub message: String,
+ }
+ 
+-fn data_dir() -> Result<PathBuf, String> { crate::platform::data_dir() }
+-#[cfg(windows)]
+-static BUNDLED_WHISPER: std::sync::OnceLock<PathBuf> = std::sync::OnceLock::new();
+-pub(crate) fn configure(app: &AppHandle) -> Result<(), String> {
+-    #[cfg(windows)]
+-    { let path = crate::resource(app, "media-tools/whisper-cli")?; let _ = BUNDLED_WHISPER.set(path); }
+-    #[cfg(not(windows))]
+-    { let _ = app; }
+-    Ok(())
+-}
+-fn whisper_path(app: &AppHandle) -> Result<PathBuf, String> {
+-    #[cfg(windows)]
+-    { crate::resource(app, "media-tools/whisper-cli") }
+-    #[cfg(not(windows))]
+-    { let _ = app; Ok(tools_dir()?.join("whisper-cli")) }
+-}
+-fn downloader_path(app: &AppHandle) -> Result<PathBuf, String> {
+-    #[cfg(windows)]
+-    { crate::resource(app, "media-tools/yt-dlp.exe") }
+-    #[cfg(not(windows))]
+-    { let _ = app; Ok(tools_dir()?.join("yt-dlp_macos")) }
+-}
+-
++fn data_dir() -> Result<PathBuf, String> {
++    let home = std::env::var_os("HOME").ok_or("Домашняя папка недоступна.")?;
++    let path = PathBuf::from(home).join("Library/Application Support/com.barsik.studio");
++    if !path.is_absolute() { return Err("Домашняя папка недоступна.".into()); }
++    Ok(path)
++}
+ fn tools_dir() -> Result<PathBuf, String> { Ok(data_dir()?.join("media-tools")) }
+ pub fn subtitle_cache_dir() -> Result<PathBuf, String> {
+     let path = data_dir()?.join("cache/subtitles");
+@@ -73,39 +49,37 @@
+     loop { let n = file.read(&mut buffer).map_err(|_| "Не удалось проверить файл инструмента.")?; if n == 0 { break; } hash.update(&buffer[..n]); }
+     Ok(format!("{:x}", hash.finalize()))
+ }
+-#[cfg(not(windows))]
+ fn set_executable(path: &Path) -> Result<(), String> {
+     #[cfg(unix)] { use std::os::unix::fs::PermissionsExt; fs::set_permissions(path, fs::Permissions::from_mode(0o755)).map_err(|_| "Не удалось подготовить инструмент.")?; }
+     Ok(())
+ }
+-fn status(app: &AppHandle) -> MediaToolsStatus {
++fn status() -> MediaToolsStatus {
+     let path = tools_dir().unwrap_or_default();
+-    let downloader_ready = downloader_path(app).is_ok_and(|path| executable(&path));
+-    let speech_cpu = crate::platform::ensure_speech_cpu();
+-    let subtitles_ready = speech_cpu.is_ok() && whisper_path(app).is_ok_and(|path| executable(&path));
++    let downloader_ready = executable(&path.join("yt-dlp_macos"));
++    let subtitles_ready = executable(&path.join("whisper-cli"));
+     let model_ready = path.join(MODEL_NAME).metadata().is_ok_and(|m| m.is_file() && m.len() == MODEL_BYTES);
+-    let message = match speech_cpu { Err(error) => error, Ok(()) => if downloader_ready && subtitles_ready && model_ready { "Загрузка и субтитры готовы.".into() } else { "Подготовьте загрузчик и модель речи один раз.".into() } };
++    let message = if downloader_ready && subtitles_ready && model_ready { "Загрузка и субтитры готовы." }
++        else { "Подготовьте загрузчик и модель речи один раз." }.into();
+     MediaToolsStatus { downloader_ready, subtitles_ready, model_ready, message }
+ }
+ #[tauri::command]
+-pub fn media_tools_status(app: AppHandle) -> MediaToolsStatus { status(&app) }
++pub fn media_tools_status(_app: AppHandle) -> MediaToolsStatus { status() }
+ 
+ fn install_asset(url: &str, path: &Path, expected: &str, size: u64, control: &RenderControl) -> Result<(), String> {
+     if path.metadata().is_ok_and(|m| m.len() == size) && hash_file(path).ok().as_deref() == Some(expected) { return Ok(()); }
+     let temp = path.with_extension(format!("{:016x}.partial", rand::random::<u64>()));
+-    let mut curl = Command::new(crate::platform::curl()?);
++    let mut curl = Command::new("/usr/bin/curl");
+     curl.args(["--disable", "--fail", "--location", "--silent", "--show-error", "--proto", "=https", "--proto-redir", "=https", "--connect-timeout", "20", "--max-time", "900", "--retry", "2", "--max-filesize", &size.to_string(), "--output"]).arg(&temp).arg(url);
+     let result = (|| {
+         control.run_cancellable(curl, Duration::from_secs(950)).map_err(|_| "Не удалось скачать инструмент. Проверьте интернет и повторите.")?;
+         if temp.metadata().map_err(|_| "Загрузка не завершена.")?.len() != size || hash_file(&temp)? != expected { return Err("Проверка скачанного файла не прошла. Повторите подготовку.".into()); }
+-        crate::platform::sync_file(&temp).map_err(|_| "Не удалось сохранить инструмент.")?;
++        File::open(&temp).and_then(|file| file.sync_all()).map_err(|_| "Не удалось сохранить инструмент.")?;
+         fs::rename(&temp, path).map_err(|_| "Не удалось установить инструмент.")?;
+         Ok(())
+     })();
+     if result.is_err() { let _ = fs::remove_file(temp); }
+     result
+ }
+-#[cfg(not(windows))]
+ fn copy_whisper(app: &AppHandle, folder: &Path) -> Result<(), String> {
+     let source = crate::resource(app, "media-tools/whisper-cli")?;
+     let destination = folder.join("whisper-cli");
+@@ -119,19 +93,13 @@
+     Ok(())
+ }
+ fn prepare(app: &AppHandle, model: bool, control: &RenderControl) -> Result<MediaToolsStatus, String> {
+-    if model { crate::platform::ensure_speech_cpu()?; }
+     let _guard = INSTALL.lock().map_err(|_| "Подготовка инструментов занята.")?;
+     let folder = tools_dir()?; fs::create_dir_all(&folder).map_err(|_| "Не удалось открыть папку инструментов.")?;
+-    #[cfg(not(windows))]
+-    {
+-        copy_whisper(app, &folder)?;
+-        install_asset(DOWNLOADER_URL, &folder.join("yt-dlp_macos"), DOWNLOADER_HASH, DOWNLOADER_BYTES, control)?;
+-        set_executable(&folder.join("yt-dlp_macos"))?;
+-    }
+-    #[cfg(windows)]
+-    { configure(app)?; let _ = whisper_path(app)?; let _ = downloader_path(app)?; }
++    copy_whisper(app, &folder)?;
++    install_asset(DOWNLOADER_URL, &folder.join("yt-dlp_macos"), DOWNLOADER_HASH, DOWNLOADER_BYTES, control)?;
++    set_executable(&folder.join("yt-dlp_macos"))?;
+     if model { install_asset(MODEL_URL, &folder.join(MODEL_NAME), MODEL_HASH, MODEL_BYTES, control)?; }
+-    Ok(status(app))
++    Ok(status())
+ }
+ #[tauri::command]
+ pub async fn prepare_media_tools(app: AppHandle) -> Result<MediaToolsStatus, String> {
+@@ -195,7 +163,7 @@
+         let host = url.host_str().ok_or("Не указан сайт.")?;
+         let address = match ip { IpAddr::V4(v) => v.to_string(), IpAddr::V6(v) => format!("[{v}]") };
+         let resolve = format!("{host}:443:{address}");
+-        let mut curl = Command::new(crate::platform::curl()?);
++        let mut curl = Command::new("/usr/bin/curl");
+         curl.args(["--disable", "--silent", "--show-error", "--proto", "=https", "--noproxy", "*", "--resolve", &resolve, "--max-redirs", "0", "--connect-timeout", "20", "--max-time", "600", "--max-filesize", "2147483648", "--dump-header"]).arg(&headers).arg("--output").arg(&temporary).arg(url.as_str());
+         control.run_cancellable(curl, Duration::from_secs(620)).map_err(|_| "Не удалось скачать видео. Проверьте общедоступную ссылку.")?;
+         let metadata = fs::metadata(&headers).map_err(|_| "Нет ответа сайта.")?;
+@@ -238,7 +206,7 @@
+     let path = if direct_video(&url) { download_direct(url, &folder, &control)? } else {
+         prepare(app, false, &control)?;
+         let node = crate::download_runtime::node(app)?;
+-        let mut command = Command::new(downloader_path(app)?);
++        let mut command = Command::new(tools_dir()?.join("yt-dlp_macos"));
+         command.args(["--ignore-config", "--no-plugin-dirs", "--no-remote-components", "--no-js-runtimes", "--js-runtimes"]).arg(format!("node:{}", node.display()))
+             .args(["--no-cookies", "--no-playlist", "--playlist-items", "1", "--max-filesize", "2G", "--socket-timeout", "20", "--retries", "2", "--fragment-retries", "2", "--restrict-filenames", "--no-write-info-json", "--no-write-thumbnail", "--no-write-subs", "--no-write-auto-subs", "--no-progress", "--newline", "--ffmpeg-location"]).arg(&ff)
+             .args(["-f", "bv*[height<=1920][vcodec^=avc1]+ba[ext=m4a]/b[ext=mp4]/b", "--merge-output-format", "mp4", "-o"]).arg(folder.join("%(title).80B.%(ext)s")).arg("--").arg(url.as_str());
+@@ -299,22 +267,16 @@
+ pub fn transcribe_clip(ff: &Path, input: &Path, start: f64, duration: f64, language: &str, cache: &Path, control: &RenderControl) -> Result<PathBuf, String> {
+     if !start.is_finite() || start < 0.0 || !duration.is_finite() || duration <= 0.0 || duration > 600.0 || !["ru", "en", "auto"].contains(&language) { return Err("Некорректный фрагмент для субтитров.".into()); }
+     if control.is_cancelled() { return Err("Операция отменена.".into()); }
+-    let tools = tools_dir()?;
+-    #[cfg(windows)]
+-    let whisper = BUNDLED_WHISPER.get().cloned().ok_or("Встроенное распознавание речи недоступно. Перенесите папку приложения целиком.")?;
+-    #[cfg(not(windows))]
+-    let whisper = tools.join("whisper-cli");
+-    let model = tools.join(MODEL_NAME);
++    let tools = tools_dir()?; let whisper = tools.join("whisper-cli"); let model = tools.join(MODEL_NAME);
+     if !executable(&whisper) || !model.is_file() { return Err("Сначала нажмите «Подготовить инструменты» для бесплатных автосубтитров.".into()); }
+     let source = fs::canonicalize(input).map_err(|_| "Исходник субтитров недоступен.")?;
+     let metadata = source.metadata().map_err(|_| "Исходник субтитров недоступен.")?;
+     let modified = metadata.modified().ok().and_then(|v| v.duration_since(UNIX_EPOCH).ok()).map(|v| v.as_nanos()).unwrap_or_default();
+-    let key = format!("whisper-small-q5_1-{WHISPER_VERSION}-words-context-v3|{}|{}|{modified}|{start:.6}|{duration:.6}|{language}|{MODEL_HASH}", source.display(), metadata.len());
++    let key = format!("whisper-small-q5_1-v1.9.5-words-context-v3|{}|{}|{modified}|{start:.6}|{duration:.6}|{language}|{MODEL_HASH}", source.display(), metadata.len());
+     let digest = format!("{:x}", Sha256::digest(key.as_bytes()));
+     fs::create_dir_all(cache).map_err(|_| "Кэш субтитров недоступен.")?;
+     let destination = cache.join(format!("{digest}.srt"));
+     if destination.is_file() { return Ok(destination); }
+-    crate::platform::ensure_speech_cpu()?;
+     let prefix = cache.join(format!(".{digest}-{:016x}", rand::random::<u64>()));
+     let temporary = TemporaryAudio { wav: prefix.with_extension("wav"), prefix: prefix.clone() };
+     let (context_start, context_duration, offset) = speech_window(start, duration);
+@@ -330,7 +292,7 @@
+     if control.is_cancelled() { return Err("Операция отменена.".into()); }
+     let text = fs::read_to_string(&srt).map_err(|_| "Не прочитать распознанные слова.")?;
+     fs::write(&srt, clip_word_srt(&text, offset, duration)).map_err(|_| "Не подготовить слова для фрагмента.")?;
+-    crate::platform::sync_file(&srt).map_err(|_| "Не удалось сохранить субтитры.")?;
++    File::open(&srt).and_then(|file| file.sync_all()).map_err(|_| "Не удалось сохранить субтитры.")?;
+     if control.is_cancelled() { return Err("Операция отменена.".into()); }
+     fs::rename(&srt, &destination).map_err(|_| "Не удалось сохранить кэш субтитров.")?;
+     Ok(destination)
+--- a/src-tauri/src/platform.rs
++++ b/src-tauri/src/platform.rs
+@@ -1,116 +0,0 @@
+-//! OS boundaries for the desktop bundle. Never resolve tool executables through PATH.
+-use std::{path::{Path, PathBuf}, process::{Child, Command}};
+-
+-pub(crate) fn resource_name(name: &str) -> &str {
+-    #[cfg(windows)]
+-    { return match name { "ffmpeg" => "ffmpeg.exe", "media-tools/whisper-cli" => "media-tools/whisper-cli.exe", other => other }; }
+-    #[cfg(not(windows))]
+-    { name }
+-}
+-
+-pub(crate) fn data_dir() -> Result<PathBuf, String> {
+-    #[cfg(windows)]
+-    let path = std::env::var_os("APPDATA").or_else(|| std::env::var_os("LOCALAPPDATA"))
+-        .map(|root| PathBuf::from(root).join("com.barsik.studio")).ok_or("Папка данных приложения недоступна.")?;
+-    #[cfg(not(windows))]
+-    let path = PathBuf::from(std::env::var_os("HOME").ok_or("Домашняя папка недоступна.")?).join("Library/Application Support/com.barsik.studio");
+-    if !path.is_absolute() { return Err("Папка данных приложения недоступна.".into()); }
+-    Ok(path)
+-}
+-
+-#[cfg(windows)]
+-fn system_directory() -> Result<PathBuf, String> {
+-    let root = PathBuf::from(std::env::var_os("SystemRoot").ok_or("Системная папка Windows недоступна.")?);
+-    if !root.is_absolute() { return Err("Системная папка Windows недоступна.".into()); }
+-    Ok(root.join("System32"))
+-}
+-
+-pub(crate) fn curl() -> Result<PathBuf, String> {
+-    #[cfg(windows)]
+-    { let path = system_directory()?.join("curl.exe"); if !path.is_file() { return Err("Для загрузки нужен Windows 10 версии 1803 или новее либо Windows 11.".into()); } Ok(path) }
+-    #[cfg(not(windows))]
+-    { Ok(PathBuf::from("/usr/bin/curl")) }
+-}
+-
+-pub(crate) fn ensure_speech_cpu() -> Result<(), String> {
+-    #[cfg(all(windows, target_arch = "x86_64"))]
+-    if !std::is_x86_feature_detected!("avx2") || !std::is_x86_feature_detected!("fma") || !std::is_x86_feature_detected!("f16c") {
+-        return Err("Для распознавания речи нужен процессор с AVX2, FMA и F16C. Монтаж по времени и загрузка видео доступны без распознавания; отключите автосубтитры.".into());
+-    }
+-    Ok(())
+-}
+-
+-pub(crate) fn sync_file(path: &Path) -> std::io::Result<()> {
+-    // FlushFileBuffers requires a writable Windows handle, even when the
+-    // caller only needs to flush a file produced by an external encoder.
+-    #[cfg(windows)]
+-    { std::fs::OpenOptions::new().read(true).write(true).open(path)?.sync_all() }
+-    #[cfg(not(windows))]
+-    { std::fs::File::open(path)?.sync_all() }
+-}
+-
+-pub(crate) fn hide_console(command: &mut Command) {
+-    #[cfg(windows)]
+-    { use std::os::windows::process::CommandExt; command.creation_flags(0x0800_0000); }
+-    #[cfg(not(windows))]
+-    { let _ = command; }
+-}
+-
+-pub(crate) fn terminate_child(child: &mut Child) {
+-    // yt-dlp may launch FFmpeg or Node. Terminate descendants too, otherwise
+-    // they can retain the output pipes after the tracked parent is cancelled.
+-    #[cfg(windows)]
+-    if let Ok(system) = system_directory() {
+-        let mut command = Command::new(system.join("taskkill.exe"));
+-        command.args(["/PID", &child.id().to_string(), "/T", "/F"])
+-            .stdin(std::process::Stdio::null()).stdout(std::process::Stdio::null()).stderr(std::process::Stdio::null());
+-        hide_console(&mut command);
+-        let _ = command.status();
+-    }
+-    let _ = child.kill();
+-}
+-
+-pub(crate) fn open_folder(folder: &Path) -> Result<(), String> {
+-    #[cfg(windows)]
+-    let mut command = {
+-        let root = PathBuf::from(std::env::var_os("SystemRoot").ok_or("Системная папка Windows недоступна.")?);
+-        if !root.is_absolute() { return Err("Системная папка Windows недоступна.".into()); }
+-        let mut command = Command::new(root.join("explorer.exe"));
+-        // canonicalize() adds the Win32 extended path prefix. Explorer expects
+-        // a normal drive/UNC spelling; do not pass its comma-based switches.
+-        let raw = folder.to_string_lossy();
+-        let display = raw.strip_prefix(r"\\?\UNC\").map(|p| format!(r"\\{p}")).unwrap_or_else(|| raw.strip_prefix(r"\\?\").unwrap_or(&raw).to_string());
+-        command.arg(display);
+-        command
+-    };
+-    #[cfg(not(windows))]
+-    let mut command = { let mut command = Command::new("/usr/bin/open"); command.arg(folder); command };
+-    hide_console(&mut command);
+-    // Explorer may hand the request to an existing process and return a
+-    // nonzero status. A successful spawn is the correct success boundary.
+-    #[cfg(windows)]
+-    { command.spawn().map_err(|e| format!("Не открыть папку: {e}"))?; Ok(()) }
+-    #[cfg(not(windows))]
+-    { let status = command.status().map_err(|e| e.to_string())?; if status.success() { Ok(()) } else { Err("Не удалось открыть папку.".into()) } }
+-}
+-
+-#[cfg(test)]
+-mod tests {
+-    #[test]
+-    fn completed_files_can_be_flushed_with_a_writable_windows_handle() {
+-        let path = std::env::temp_dir().join(format!("graffin-flush-{}-{}.tmp", std::process::id(), crate::stamp()));
+-        std::fs::write(&path, b"complete").unwrap();
+-        super::sync_file(&path).unwrap();
+-        assert_eq!(std::fs::read(&path).unwrap(), b"complete");
+-        std::fs::remove_file(path).unwrap();
+-    }
+-
+-    #[test]
+-    fn executable_resources_match_the_target_platform() {
+-        #[cfg(windows)]
+-        { assert_eq!(super::resource_name("ffmpeg"), "ffmpeg.exe"); assert_eq!(super::resource_name("media-tools/whisper-cli"), "media-tools/whisper-cli.exe"); }
+-        #[cfg(not(windows))]
+-        { assert_eq!(super::resource_name("ffmpeg"), "ffmpeg"); }
+-        assert_eq!(super::resource_name("banner.png"), "banner.png");
+-    }
+-}
+--- a/src-tauri/src/render_history.rs
++++ b/src-tauri/src/render_history.rs
+@@ -102,7 +102,7 @@
+     use super::*;
+     #[test]fn legacy_migration_reads_only_completed_valid_ranges(){
+         let root=std::env::temp_dir().join(format!("graffin-render-history-{}-{:x}",std::process::id(),rand::random::<u64>()));fs::create_dir(&root).unwrap();let hash="a".repeat(64);
+-        fs::write(root.join("queue-v1.json"),serde_json::to_vec(&serde_json::json!({"config":{"caption":"ignored"},"intervals":[{"source_hash":hash,"start":1.0,"end":7.0,"output_path":root.join("one.mp4").to_string_lossy(),"status":"rendered"},{"source_hash":hash,"start":9.0,"end":15.0,"output_path":root.join("two.mp4").to_string_lossy(),"status":"failed"}]})).unwrap()).unwrap();
++        fs::write(root.join("queue-v1.json"),serde_json::to_vec(&serde_json::json!({"config":{"caption":"ignored"},"intervals":[{"source_hash":hash,"start":1.0,"end":7.0,"output_path":"/tmp/one.mp4","status":"rendered"},{"source_hash":hash,"start":9.0,"end":15.0,"output_path":"/tmp/two.mp4","status":"failed"}]})).unwrap()).unwrap();
+         let p=root.join("render-history-v1.json");let history=load(&p).unwrap();assert_eq!(history.intervals.len(),1);persist(&p,&history).unwrap();let saved=fs::read_to_string(&p).unwrap();assert!(!saved.contains("caption"));assert_eq!(load(&p).unwrap().intervals[0].start,1.0);fs::remove_dir_all(root).unwrap();
+     }
+     #[test]fn record_uses_authoritative_completed_recipe_without_reading_moved_source(){
+--- a/src-tauri/src/studio_presets.rs
++++ b/src-tauri/src/studio_presets.rs
+@@ -56,7 +56,7 @@
+ #[cfg(test)]
+ mod tests {
+     use super::*;
+-    fn request()->PresetSaveRequest { PresetSaveRequest{id:None,name:"Юмор".into(),settings:Settings{output_dir:std::env::temp_dir().to_string_lossy().into_owned(),..Settings::default()}} }
++    fn request()->PresetSaveRequest { PresetSaveRequest{id:None,name:"Юмор".into(),settings:Settings{output_dir:"/tmp".into(),..Settings::default()}} }
+     #[test] fn settings_validation(){let mut req=request();assert!(validate(&req).is_ok());req.settings.subtitle_color="red".into();assert!(validate(&req).is_err());req=request();req.name=" \n".into();assert!(validate(&req).is_err());}
+     #[test] fn presets_roundtrip_does_not_store_account_or_schedule(){let dir=std::env::temp_dir().join(format!("graffin-preset-test-{}-{}",std::process::id(),now()));fs::create_dir(&dir).unwrap();let p=dir.join("presets.json");let req=request();let entry=StudioPreset{id:"preset-test".into(),name:req.name,settings:req.settings,updated_at:now()};persist(&p,&[entry]).unwrap();assert_eq!(load(&p).unwrap().len(),1);let text=fs::read_to_string(&p).unwrap();for forbidden in ["accountId","slots","cookies","automationEnabled"]{assert!(!text.contains(forbidden));}fs::remove_dir_all(dir).unwrap();}
+     #[test] fn old_presets_ignore_removed_publication_fields(){let req=request();let old=serde_json::json!({"id":"preset-old","name":"Старое оформление","settings":req.settings,"caption":{"caption":"old","hashtags":"#old"},"updatedAt":1});let item:StudioPreset=serde_json::from_value(old).unwrap();assert_eq!(item.id,"preset-old");assert!(!serde_json::to_string(&item).unwrap().contains("hashtags"));}
+--- a/src-tauri/src/subtitle_editor.rs
++++ b/src-tauri/src/subtitle_editor.rs
+@@ -227,7 +227,7 @@
+     let backup=path.parent().unwrap().join(format!(".graffin-caption-backup-{}.mp4",token()));
+     let backup_result=(|| {
+         fs::hard_link(&path,&backup).or_else(|_|fs::copy(&path,&backup).map(|_|())).map_err(|_|"Не сохранить исходный ролик перед заменой.")?;
+-        crate::platform::sync_file(&backup).map_err(|_|"Не сохранить резервную копию ролика.")?;
++        File::open(&backup).and_then(|file|file.sync_all()).map_err(|_|"Не сохранить резервную копию ролика.")?;
+         if let Some(parent)=backup.parent(){if let Ok(dir)=File::open(parent){let _=dir.sync_all();}}
+         Ok::<_,String>(())
+     })();
