@@ -1,0 +1,21 @@
+import { Captions, Film, Music2, Pause } from 'lucide-react';
+import type { CSSProperties } from 'react';
+import type { Media, Settings } from './types';
+
+const stamp = (value: number) => `${Math.floor(value / 60)}:${String(Math.floor(value % 60)).padStart(2, '0')}`;
+interface Props { settings: Settings; top?: Media; bottom?: Media; onInspect: (tab: string) => void }
+export default function StudioTimeline({ settings, top, bottom, onInspect }: Props) {
+  const hasPause = settings.interruptionEnabled && !!settings.interruptionPath;
+  const total = settings.duration + (hasPause ? settings.interruptionDuration : 0);
+  const pauseAt = settings.interruptionTiming === 'middle' ? settings.duration / 2 : settings.interruptionStart;
+  const percent = (value: number) => `${Math.min(100, Math.max(0, value / total * 100))}%`;
+  const laneStyle = (start: number, duration: number): CSSProperties => ({ left: percent(start), width: percent(duration) });
+  return <section className="studio-timeline" aria-label="Слои ролика">
+    <div className="timeline-header"><strong>Слои ролика</strong><span>Нажмите слой для настройки</span></div>
+    <div className="timeline-ruler" aria-hidden="true"><span /><div>{Array.from({ length: 5 }, (_, index) => <span key={index}>{stamp(total * index / 4)}</span>)}</div></div>
+    <button className="timeline-lane" type="button" aria-label="Настроить видеослой" onClick={() => onInspect('frame')}><span className="lane-name"><Film size={13} aria-hidden="true" />Видео</span><span className="lane-track">{top ? <span className="lane-clip video-clip" style={laneStyle(0, total)} title={top.name}><span>{top.name}{settings.layoutMode === 'split' && bottom ? ` + ${bottom.name}` : ''}</span></span> : <span className="timeline-empty">Добавьте основное видео</span>}</span></button>
+    <button className="timeline-lane" type="button" aria-label="Настроить слой субтитров" onClick={() => onInspect('text')}><span className="lane-name"><Captions size={13} aria-hidden="true" />Текст</span><span className="lane-track">{settings.subtitlesEnabled ? <span className="lane-clip caption-clip" style={laneStyle(0, total)}><span>Субтитры</span></span> : <span className="timeline-empty">Выключены</span>}</span></button>
+    <button className="timeline-lane" type="button" aria-label="Настроить музыкальный слой" onClick={() => onInspect('audio')}><span className="lane-name"><Music2 size={13} aria-hidden="true" />Музыка</span><span className="lane-track">{settings.musicPath && settings.musicDelay < settings.duration ? <span className="lane-clip music-clip" style={laneStyle(settings.musicDelay, Math.min(total - settings.musicDelay, settings.musicLoop ? total : Math.max(0, settings.musicDuration - settings.musicStart)))} title={settings.musicName}><span>{settings.musicName || 'Фоновая музыка'}</span></span> : <span className="timeline-empty">Добавьте трек</span>}</span></button>
+    <button className="timeline-lane" type="button" aria-label="Настроить слой баннера" onClick={() => onInspect('frame')}><span className="lane-name"><Pause size={13} aria-hidden="true" />Баннер</span><span className="lane-track">{hasPause ? <span className={`lane-clip banner-clip ${settings.interruptionTiming === 'random' || settings.interruptionTiming === 'quiet' ? 'banner-auto-range' : ''}`} style={settings.interruptionTiming === 'quiet' ? laneStyle(0,total) : settings.interruptionTiming === 'random' ? laneStyle(Math.min(settings.interruptionStart,settings.duration),Math.max(0,Math.min(settings.interruptionEnd,settings.duration)-Math.min(settings.interruptionStart,settings.duration))+settings.interruptionDuration) : laneStyle(Math.min(pauseAt, settings.duration - 1 / 30), settings.interruptionDuration)} title={settings.interruptionTiming === 'quiet' ? 'Место определится по звуку при сборке' : 'Баннер-пауза'}><span>{settings.interruptionTiming === 'quiet' ? 'В тихом моменте' : settings.interruptionTiming === 'random' ? 'Диапазон появления' : 'Пауза'}</span></span> : settings.bannerEnabled ? <span className="lane-clip banner-clip" style={laneStyle(0, total)}><span>{settings.bannerName || 'Баннер'}</span></span> : <span className="timeline-empty">Выключен</span>}</span></button>
+  </section>;
+}

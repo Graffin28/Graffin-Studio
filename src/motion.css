@@ -1,0 +1,54 @@
+@font-face{font-family:"Manrope ExtraBold";src:url("/fonts/Manrope-ExtraBold.ttf") format("truetype");font-style:normal;font-weight:800;font-display:swap}
+/* Motion follows navigation, editing, and completed actions. */
+:root{--ease-out:cubic-bezier(.16,1,.3,1);--ease-spring:cubic-bezier(.2,.9,.28,1.25)}
+.workspace-tabs{position:relative}
+.workspace-tabs::after{content:"";position:absolute;left:-11px;top:14px;width:3px;height:21px;border-radius:0 4px 4px 0;background:#becad3;transform:translateY(calc(var(--active-tab,0) * 58px));transition:transform 420ms var(--ease-spring);pointer-events:none}
+.workspace-tabs button.active::before{display:none}
+.workspace-tabs button{transition:background 230ms ease,color 230ms ease,box-shadow 230ms ease}
+.workspace-tabs button>svg{transition:transform 320ms var(--ease-spring)}
+.workspace-tabs button.active>svg{transform:scale(1.12)}
+.workspace-tabs button:active:not(:disabled){transform:none}
+.workspace-title{animation:title-change 320ms var(--ease-out) both}
+.workspace{animation:workspace-enter 420ms var(--ease-out) both}
+.source-item{animation:item-arrive 300ms var(--ease-out) both;transition:background 180ms ease,border-color 180ms ease,box-shadow 180ms ease}
+.source-item.selected{box-shadow:inset 2px 0 #a8bccd}
+.source-select img{transition:filter 180ms ease}
+.source-select:hover img{filter:brightness(1.12)}
+button:not(.switch):not(.workspace-tabs button):active:not(:disabled){transform:translateY(1px) scale(.975)}
+.primary-button{transition:transform 160ms var(--ease-spring),box-shadow 180ms ease,background 180ms ease}
+.primary-button:hover:not(:disabled){box-shadow:0 3px 16px #dce5ef12}
+.switch,.switch i{transition:background 220ms ease,transform 320ms var(--ease-spring),box-shadow 220ms ease}
+.switch:active:not(:disabled) i{box-shadow:0 0 0 3px #dce7f01c}
+.field-label input,.field-label select,.numeric-input,.banner-name,.folder-picker{transition:border-color 180ms ease,background 180ms ease,box-shadow 180ms ease}
+.numeric-input:focus-within{border-color:#97acbf;box-shadow:0 0 0 2px #829bb31a}
+.range-label input::-webkit-slider-thumb{transition:transform 150ms var(--ease-spring)}
+.range-label input:active::-webkit-slider-thumb{transform:scale(1.16)}
+.preview-banner img,.preview-banner video,.media-fit{animation:frame-reveal 260ms ease-out}
+.preview-banner img,.preview-banner video{transition:opacity 180ms ease}
+.media-fit{transition:object-position 180ms var(--ease-out)}
+.animated-expansion,.advanced-settings{transform-origin:top;animation:inspector-open 300ms var(--ease-out) both}
+.modal-scrim{animation:scrim-enter 180ms ease-out}
+.preview-modal,.import-modal{animation:dialog-enter 340ms var(--ease-spring) both}
+.error-bar{animation:notice-enter 250ms var(--ease-out) both}
+progress::-webkit-progress-value{transition:width 260ms linear}
+.export-bar{animation:export-enter 350ms var(--ease-out) both}
+.bottom-meta>span:empty{visibility:hidden}
+.preview-subtitles{font-family:"Manrope ExtraBold",sans-serif;font-weight:800;letter-spacing:-.035em;-webkit-text-stroke:.055em #000;text-shadow:0 .055em .1em #0008;line-height:1.15}
+.subtitle-word{display:inline-block;transform-origin:50% 58%;animation:word-pop 220ms linear both}
+@keyframes title-change{from{opacity:0;transform:translateX(8px)}to{opacity:1;transform:translateX(0)}}
+@keyframes workspace-enter{from{opacity:0;transform:translateX(12px);clip-path:inset(0 0 0 10px)}to{opacity:1;transform:translateX(0);clip-path:none;transform:none}}
+@keyframes item-arrive{from{opacity:0;transform:scale(.96);clip-path:inset(0 6% 0 0)}to{opacity:1;transform:none;clip-path:inset(0)}}
+@keyframes row-arrive{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:none}}
+@keyframes frame-reveal{from{opacity:.3;filter:brightness(.7)}to{opacity:1;filter:brightness(1)}}
+@keyframes inspector-open{from{opacity:0;transform:scaleY(.96);clip-path:inset(0 0 100% 0)}to{opacity:1;transform:none;clip-path:inset(0)}}
+@keyframes scrim-enter{from{opacity:0}to{opacity:1}}
+@keyframes dialog-enter{from{opacity:0;transform:translateY(8px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes notice-enter{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:none}}
+@keyframes status-enter{from{opacity:.4}to{opacity:1}}
+@keyframes export-enter{from{opacity:.3;transform:translateY(7px)}to{opacity:1;transform:none}}
+@keyframes word-pop{0%{opacity:0;transform:scale(.86)}24%{opacity:1}46%{transform:scale(1.08)}100%{opacity:1;transform:scale(1)}}
+@media(min-width:1380px){.workspace-tabs::after{left:-15px}}
+@media(prefers-reduced-motion:reduce){
+ *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+ .subtitle-word{opacity:1;transform:none}
+}

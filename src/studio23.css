@@ -1,0 +1,47 @@
+/* The existing graphite editing desk stays quiet; four task tabs organize controls. */
+[hidden]{display:none!important}
+.inspector-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px;padding:5px;background:#171c24;border:1px solid #35404e;border-radius:9px;margin:0 0 10px}
+.inspector-tabs button{min-height:35px;border-radius:5px;background:transparent;color:#98a9c0;font-size:13px;font-weight:550;padding:4px 2px}
+.inspector-tabs button[aria-selected=true]{background:#344154;color:#eff4fc;box-shadow:0 1px 3px #0003}
+.inspector-tab-panel{min-width:0}
+.settings-section h3{display:flex;align-items:center;gap:7px}
+.setting-help{font-size:12px;line-height:1.65;color:#91a1b8;margin-top:9px}
+.layout-choices{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.layout-choices button{display:flex;align-items:center;gap:10px;text-align:left;background:#1b222c;border:1px solid #3a4555;border-radius:8px;padding:11px 9px;color:#c2cde0;font-size:13px}
+.layout-choices button.selected{border-color:#a0b9e9;background:#2a374c;color:#f0f5ff}
+.layout-choices button small{display:block;color:#8e9eb5;font-size:11px;margin-top:3px}
+.layout-mini{height:41px;width:24px;flex:none;border:1px solid #6b7e9b;border-radius:3px;display:flex;flex-direction:column;gap:3px;padding:3px}
+.layout-mini i{display:block;background:#839cbd;border-radius:1px;flex:1}
+.layout-mini.split i:last-child{background:#475b77}
+.layout-mini.single{padding:4px 3px}
+.composition-frame.single-composition{background:#000;display:block}
+.single-composition .preview-top{position:absolute;left:0;right:0;top:var(--single-y);height:var(--top-size)}
+.single-composition .preview-subtitles{z-index:5}
+.single-composition .preview-banner,.single-composition .preview-footer{position:absolute;left:0;right:0;z-index:3}
+.single-composition .preview-banner{height:var(--banner-size);bottom:var(--footer-size)}
+.single-composition .preview-footer{background:transparent;bottom:0;height:var(--footer-size)}
+.single-composition .preview-footer span{display:none}
+.music-settings>select,.asset-select-line select{width:100%;min-width:0;background:#1d2530;border:1px solid #3c495c;border-radius:7px;color:#d9e3f2;min-height:39px;padding:7px 9px;font-size:13px}
+.music-settings .animated-expansion{margin-top:12px}
+.music-selected{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13px;color:#c1d2e9}
+.music-selected>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.music-settings audio{display:block;width:100%;height:38px;margin:10px 0 7px;border-radius:6px}
+.text-action{display:block;background:transparent;color:#a9c0e9;padding:4px 0;text-align:left;font-size:12px;line-height:1.5}
+.music-settings .number-pair{margin-top:17px;gap:10px}
+.music-settings .numeric-label>span,.interruption-settings .numeric-label>span{font-size:12px;line-height:1.4;min-height:32px;display:flex;align-items:end}
+.music-settings .range-label{margin-top:19px}
+.check-option{display:flex;align-items:center;gap:8px;font-size:13px;color:#b5c4d9;margin-top:15px;line-height:1.5}
+.check-option input{accent-color:#9fb8f1;width:15px;height:15px}
+.asset-select-line{display:flex;align-items:center;gap:7px;margin:12px 0}
+.asset-select-line .icon-button{flex:none}
+.interruption-thumbnail{display:block;max-height:100px;width:100%;object-fit:contain;background:#131820;border:1px solid #344154;border-radius:6px;margin:10px 0 15px}
+.interruption-settings .numeric-label{margin-top:12px}
+.interruption-settings .number-pair{gap:10px}
+.interruption-settings .field-label{margin-top:16px}
+.custom-font-library{border-top:1px solid #3b4656;margin-top:15px;padding-top:14px}
+.custom-font-library .secondary-button{margin-top:9px;min-height:34px;font-size:12px;width:100%;justify-content:center}
+.inline-setting-error{font-size:12px;color:#f1b5c4;line-height:1.6;margin-top:8px}
+.caption-style-sample{overflow:hidden}
+.preview-caption{max-width:340px;text-align:center;line-height:1.6}
+@media(max-width:1100px){.layout-choices button{gap:7px;padding:9px 6px}.inspector-tabs button{font-size:12px}.music-settings .number-pair{gap:7px}}
+@media(prefers-reduced-motion:reduce){.inspector-tabs button,.layout-choices button{transition:none}}
